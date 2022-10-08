@@ -113,18 +113,40 @@ services:
             - ../spark/app:/usr/local/spark/app # Spark scripts folder (Must be the same path in airflow and Spark Cluster)
             - ../spark/resources:/usr/local/spark/resources #Resources folder (Must be the same path in airflow and Spark Cluster)
 
-    #Jupyter notebook
-    jupyter-spark:
-        image: jupyter/pyspark-notebook:spark-3.1.2
+    mysql:
+        image: mysql:8.0
         networks:
             - default_net
         ports:
-          - "8888:8888"
-          - "4040-4080:4040-4080"
+            - "3306:3306"
         volumes:
-          - ../notebooks:/home/jovyan/work/notebooks/
-          - ../spark/resources/data:/home/jovyan/work/data/
-          - ../spark/resources/jars:/home/jovyan/work/jars/
+            - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
+            - ./data/mysql:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: "admin"
+
+    mongo:
+        image: mongo
+        restart: always
+        ports:
+            - 27017:27017
+        networks:
+            - default_net
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: admin
+
+    mongo-express:
+        image: mongo-express
+        restart: always
+        ports:
+            - 8081:8081
+        networks:
+            - default_net
+        environment:
+            ME_CONFIG_MONGODB_ADMINUSERNAME: root
+            ME_CONFIG_MONGODB_ADMINPASSWORD: admin
+            ME_CONFIG_MONGODB_URL: mongodb://root:admin@mongo:27017/
 
 networks:
     default_net:

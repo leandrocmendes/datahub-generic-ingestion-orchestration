@@ -5,3 +5,7 @@ dags/__pycache__
 part-*
 *_SUCCESS*
 *.pyc
+
+docker/data/mysql
+.idea
+.vscode
