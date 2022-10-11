@@ -1,0 +1,16 @@
+name: Leitura de parquet de orders
+mode: APPEND
+owner: leandro costa
+source:
+  typeIngestion: PARQUET
+  config:
+    path: /usr/local/spark/resources/data/bronze/parquet_orders
+
+destination:
+  typeIngestion: JDBC
+  config:
+    host: jdbc:mysql://docker_mysql_1:3306/test?enabledTLSProtocols=TLSv1.2
+    username: root
+    password: admin123
+    table: OrdersParquet
+    driver: com.mysql.cj.jdbc.Driver

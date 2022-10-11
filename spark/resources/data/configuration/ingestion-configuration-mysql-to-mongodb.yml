@@ -1,0 +1,18 @@
+name: Leitura de mysql e escrita em mongodb
+mode: OVERWRITE
+owner: leandro costa
+source:
+  typeIngestion: JDBC
+  config:
+    host: jdbc:mysql://docker_mysql_1:3306/test?enabledTLSProtocols=TLSv1.2
+    username: root
+    password: admin123
+    table: Sales
+    driver: com.mysql.cj.jdbc.Driver
+
+destination:
+  typeIngestion: MONGODB
+  config:
+    uri: mongodb://root:admin@docker_mongo_1:27017/?authSource=admin
+    table: SalesMySql
+    database: test

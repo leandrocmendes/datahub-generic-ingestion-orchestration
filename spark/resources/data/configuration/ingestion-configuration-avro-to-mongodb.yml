@@ -4,7 +4,7 @@ owner: leandro costa
 source:
   typeIngestion: AVRO
   config:
-    path: /usr/local/spark/resources/data/avro_orders/orders.avro
+    path: /usr/local/spark/resources/data/bronze/avro_orders/orders.avro
 
 destination:
   typeIngestion: MONGODB

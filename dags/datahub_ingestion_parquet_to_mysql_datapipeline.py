@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 from airflow.operators.mysql_operator import MySqlOperator
 from airflow.operators.python_operator import PythonOperator
 
-spark_app_name = "datahub-ingestion-csv-to-mysql"
-file_path = "/usr/local/spark/resources/data/configuration/ingestion-configuration-csv-to-mysql.yml"
+spark_app_name = "datahub-ingestion-parquet-to-mysql"
+file_path = "/usr/local/spark/resources/data/configuration/ingestion-configuration-parquet-to-mysql.yml"
 mysql_jar_path = "/usr/local/spark/resources/jars/mysql-connector-java-8.0.30.jar"
 mysql_connection = "mysql_default"
 
@@ -22,12 +22,12 @@ default_args = {
     "email_on_failure": False,
     "email_on_retry": False,
     "retries": 1,
-    "retry_delay": timedelta(minutes=1)
+    "retry_delay": timedelta(minutes=1),
 }
 
 
 def fetch_records():
-    query = "SELECT * FROM MoviesCsv Limit 10"
+    query = "SELECT * FROM OrdersParquet Limit 10"
     mysql_hook = MySqlHook(
         mysql_conn_id=mysql_connection,
         schema="test"
@@ -40,10 +40,10 @@ def fetch_records():
 
 
 dag = DAG(
-    dag_id="datahub_ingestion_csv_to_mysql_datapipeline",
-    description="This DAG call datahub with a source csv and mysql destination",
+    dag_id="datahub_ingestion_parquet_to_mysql_datapipeline",
+    description="This DAG call datahub with a source parquet and mysql destination",
     default_args=default_args,
-    schedule_interval=None
+    schedule_interval=None,
 )
 
 start = DummyOperator(task_id="start", dag=dag)
@@ -56,12 +56,12 @@ create_database = MySqlOperator(
 )
 
 datahub_job = SparkSubmitOperator(
-    task_id="datahub-ingestion-csv-to-mysql",
+    task_id="datahub-ingestion-parquet-to-mysql",
     application="/usr/local/spark/app/datahub-generic-ingestion-1.0-SNAPSHOT.jar",
     name=spark_app_name,
     conn_id="spark_default",
     files=file_path,
-    application_args=["ingestion-configuration-csv-to-mysql.yml"],
+    application_args=["ingestion-configuration-parquet-to-mysql.yml"],
     dag=dag,
     java_class="com.br.datahub.generic.ingestion.Main",
     jars=mysql_jar_path,

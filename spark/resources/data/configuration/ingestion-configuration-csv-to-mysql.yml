@@ -1,0 +1,18 @@
+name: Leitura de csv de orders
+mode: OVERWRITE
+owner: leandro costa
+source:
+  typeIngestion: CSV
+  config:
+    path: /usr/local/spark/resources/data/bronze/movies.csv
+    separator: ","
+    header: true
+
+destination:
+  typeIngestion: JDBC
+  config:
+    host: jdbc:mysql://docker_mysql_1:3306/test?enabledTLSProtocols=TLSv1.2
+    username: root
+    password: admin123
+    table: MoviesCsv
+    driver: com.mysql.cj.jdbc.Driver
