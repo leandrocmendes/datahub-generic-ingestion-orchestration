@@ -12,3 +12,12 @@ destination:
     uri: mongodb://root:admin@docker_mongo_1:27017/?authSource=admin
     table: OrdersAvro
     database: test
+
+logConfig:
+  registerLog: true
+  typeConfig:
+    typeIngestion: MONGODB
+    config:
+      uri: mongodb://root:admin@docker_mongo_1:27017/?authSource=admin
+      table: Log
+      database: test

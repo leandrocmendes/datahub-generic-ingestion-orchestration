@@ -119,6 +119,7 @@ services:
             - default_net
         ports:
             - "3306:3306"
+        command: --default-authentication-plugin=mysql_native_password
         volumes:
             - ./config/mysql/mysql.cnf:/etc/mysql/conf.d/mysql.cnf:ro
             - ./data/mysql:/var/lib/mysql
